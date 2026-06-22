@@ -20,6 +20,9 @@ class AccountController {
         try {
             const {currentPassword, newPassword} = req.body;
             await this.accountService.changePassword(req.user.userId, {currentPassword, newPassword});
+
+            // Clear auth cookie and prompt re-login
+            res.clearCookie('auth');
             res.status(201).json({
                 success: true,
                 message: 'Password changed successfully'

@@ -1,9 +1,9 @@
-function buildChangeLog(oldObject, changeObject) {
+function buildChangeLog(oldObject, changeObject, path) {
     const changes = [];
     const keys = Object.keys(changeObject);
     for (let key of keys) {
         changes.push({
-            field: key,
+            field: path + '.' + key,
             oldValue: oldObject[key],
             newValue: changeObject[key]
         });

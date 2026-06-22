@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const User = require('./user.model');
 
 // Only these fields' value changes are stored
 const fieldEnum = ['auth.email', 'auth.username', 'auth.passwordHash', 'auth.role', 'profile.firstname', 'profile.lastname', 'profile.dob', 'profile.phone', 'profile.country_code']
@@ -20,7 +19,6 @@ const profileLogSchema = new mongoose.Schema({
         },
         oldValue: {
             type: String,
-            required: true,
             immutable: true
         },
         newValue: {

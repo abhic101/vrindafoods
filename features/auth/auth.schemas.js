@@ -2,8 +2,8 @@ const { z } = require("zod");
 
 // Login request schema, parse req.body . Should be strict() always
 const loginSchema = z.object({
-    email: z.string().email().trim().optional(),
-    username: z.string().trim()
+    email: z.string().email().trim().toLowerCase().optional(),
+    username: z.string().trim().toLowerCase()
         .min(3, 'Username must be atleast 3 characters long')
         .optional(),
     password: z.string()
@@ -16,10 +16,10 @@ const loginSchema = z.object({
 // Signup request schema, parses req.body . Shape can be different from db
 // Feature to add - age limit by dynamically calculating from dob
 const signupSchema = z.object({
-    email: z.string().email().trim()
+    email: z.string().email().trim().toLowerCase()
         .min(1, 'Email cannot be empty')
         .max(50, 'Email cannot be larger than 50 characters'),
-    username: z.string().trim()
+    username: z.string().trim().toLowerCase()
         .min(3, 'Username must be atleast 3 characters long')
         .max(20, 'Username cannot be larger than 20 characters')
         .regex(/^[a-zA-Z0-9_-]+$/, 'Username can only contain letters, numbers, underscores, and hyphens'),

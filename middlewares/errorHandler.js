@@ -4,6 +4,7 @@ function errorHandler(err, req, res, next) {
 
     // Logging
     console.error('An Error has occurred: ', err.stack);
+    console.error("Occurred here: ", err.cause);
     if (process.env.STAGE == 'dev') {
         // logger
     }

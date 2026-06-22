@@ -23,7 +23,7 @@ class NotFoundError extends AppError {
 }
 class ValidationError extends BadRequestError {
     code = 422;
-    constructor (message, details, options = {}) {
+    constructor (message, details = {}, options = {}) {
         super(message, {cause: options.cause});
         this.details = details;
     }

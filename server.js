@@ -6,7 +6,7 @@ const db = require('./config/db.config');
 const PORT = process.env.PORT || 3000;
 
 // For graceful exit on error signal
-async function shutdown(signal) {
+async function shutdown(signal, server) {
     console.log(`${signal} received, shutting down...`);
 
     server.close(async () => {
@@ -40,18 +40,18 @@ async function start() {
     });
 
     // Binding shutdown functionality for error signals from system
-    process.on('SIGTERM', () => shutdown('SIGTERM'));
-    process.on('SIGINT', () => shutdown('SIGNINT'));
+    process.on('SIGTERM', () => shutdown('SIGTERM', server));
+    process.on('SIGINT', () => shutdown('SIGNINT', server));
     
     // Binding shutdown or error signals from app
     process.on('uncaughtException', (err) => {
         console.error('Uncaught exception: ', err);
-        shutdown('uncaughtException');
+        shutdown('uncaughtException', server);
     });
 
     process.on('unhandledRejection', (err) => {
         console.error('Unhandled rejection: ', err)
-        shutdown('unhandledRejection');
+        shutdown('unhandledRejection', server);
     });
 }
 

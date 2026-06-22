@@ -4,13 +4,15 @@ const userSchema = mongoose.Schema({
     auth: {
         email: {
             type: String,
-            required: true
+            required: true,
+            lowercase: true
         },
         username: {
             type: String,
             minlength: 3,
             maxlength: 20,
             required: true,
+            lowercase: true
         },
         passwordHash: {
             type: String,

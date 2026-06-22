@@ -1,15 +1,14 @@
 class ProfileLogRepository {
-    constructor (model) {
-        this.model = model;
+    constructor (profileModel) {
+        this.profileModel = profileModel;
     }
 
     // Add change log. changesArray is already in required shape
     addLog = (userID, changesArray) => {
-        const newLogQuery = this.model.create({
+        const newLogQuery = new this.profileModel({
             user: userID,
             changes: changesArray,
         });
-
         return newLogQuery;
     }
 }
