@@ -1,7 +1,14 @@
 const jwt = require('jsonwebtoken');
-const { UnauthorizedError , TokenExpiredError, InvalidTokenError } = require('../errors/app.errors');
+const { UnauthorizedError , TokenExpiredError, ForbiddenError } = require('../errors/app.errors');
+const hasPermission = require('../config/accessRules');
 
-function auth (req, res, next) {
+/**
+ * 
+ * @param {string} requiredPermission - The permission string to check against 
+ * @returns {Function} - The actual Express middleware function
+ */
+
+const auth = (requiredPermission) => ((req, res, next) => {
     try {
         if (!req.cookies.auth) {
             throw new UnauthorizedError('Please login to proceed');
@@ -9,6 +16,11 @@ function auth (req, res, next) {
         const token = req.cookies.auth;
         const verified = jwt.verify(token, process.env.JWT_SECRET_KEY);
         req.user = verified;
+
+        // Check permission
+        if (!hasPermission(req.user.role, requiredPermission)) {
+            throw new ForbiddenError('You do not have access to do this operation');
+        }
         next();
     } catch (err) {
         if (err.name === 'TokenExpiredError') {
@@ -16,6 +28,6 @@ function auth (req, res, next) {
         }
         next(err);
     }
-}
+})
 
 module.exports = auth;

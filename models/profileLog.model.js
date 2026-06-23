@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
+const { PROFILE_LOG_FIELDS } = require('../constants/models.constants');
 
 // Only these fields' value changes are stored
-const fieldEnum = ['auth.email', 'auth.username', 'auth.passwordHash', 'auth.role', 'profile.firstname', 'profile.lastname', 'profile.dob', 'profile.phone', 'profile.country_code']
 
 const profileLogSchema = new mongoose.Schema({
     user: {
@@ -13,7 +13,7 @@ const profileLogSchema = new mongoose.Schema({
     changes: [{
         field: {
             type: String,
-            enum: fieldEnum,
+            enum: Object.values(PROFILE_LOG_FIELDS),
             required: true,
             immutable: true
         },
