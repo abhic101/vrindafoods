@@ -3,7 +3,13 @@ class ProfileLogRepository {
         this.profileModel = profileModel;
     }
 
-    // Add change log. changesArray is already in required shape
+    /**
+     * Add user change log
+     * 
+     * @param {string} userID ObjectId of user as string
+     * @param {Array} changesArray Array that is already in required shape
+     * @returns 
+     */
     addLog = (userID, changesArray) => {
         const newLogQuery = new this.profileModel({
             user: userID,

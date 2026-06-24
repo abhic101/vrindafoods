@@ -1,3 +1,10 @@
+
+/**
+ * Build Confilct error details object
+ * 
+ * @param {Error} err Error object (of the conflicted field type). Mainly mongo error 11000
+ * @returns {Object} Details object of conflicted fields
+ */
 function buildConflictErrorDetails(err) {
     const details = [];
     const fields = Object.keys(err.keyPattern);

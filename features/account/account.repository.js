@@ -4,25 +4,46 @@ const { buildConflictErrorDetails } = require('../../errors/error.utils');
 const { buildProfileForSet } = require('./account.utils');
 
 class AccountRepository {
+    /**
+     * 
+     * @param {import('../../models/user.model')} userModel 
+     * @param {import('../../repositories/user.repository')} userRepository 
+     * @param {import('../../repositories/profileLog.repository')} profileLogRepository 
+     */
     constructor(userModel, userRepository, profileLogRepository) {
         this.userModel = userModel;
         this.userRepository = userRepository;
         this.profileLogRepository = profileLogRepository;
     }
 
-    // Profile + auth (non-sensitive) as it is required to display
-    findUserProfile = async (userId) => {
+    /**
+     * Find user profile
+     * 
+     * @param {string} userId ObjectId of the user as string
+     * @returns User document with only non-sensitive fields if found. undefined otherwise
+     */
+    async findUserProfile (userId) {
         return await this.userRepository.findUserProfile(userId).select('auth.email auth.username auth.role').lean();
     }
 
-    // Auth with sensitive fields for verification of important changes
+    /**
+     * Find user credentials for authorization purposes
+     * 
+     * @param {string} userId ObjectId of the user as string
+     * @returns User document with auth and sensitive fields
+     */
     findUserAuth = async (userId) => {
         return await this.userRepository.findUserAuth(userId).lean();
     }
 
-    // Writing password change and profile log in a single session for ACID guarantee
-    changePassword = async (userId, newPasswordHash, changes) => {
-        const session = await mongoose.startSession();
+    /**
+     * 
+     * @param {string} userId ObjectId of the user as string
+     * @param {string} newPasswordHash Hashed string of the new password to set
+     * @param {Object} changes ChangeLog object
+     */
+    async changePassword (userId, newPasswordHash, changes) {
+        const session = await mongoose.startSession();      // For ACID guarantee
         try {
             session.startTransaction();
             // Update document
@@ -34,6 +55,7 @@ class AccountRepository {
                 }
             );
 
+            // Log changes
             const log = this.profileLogRepository.addLog(userId, changes);
             log.$session(session);
             await log.save();
@@ -47,15 +69,21 @@ class AccountRepository {
         }
     }
 
-    // Changing username. Need to run validators
-    changeUsername = async (userId, newUsername, changes) => {
+    /**
+     * For changing username
+     * 
+     * @param {string} userId ObjectId of the user as string
+     * @param {string} newUsername New username to be set
+     * @param {Object} changes ChangeLog
+     */
+    async changeUsername  (userId, newUsername, changes) {
         const session = await mongoose.startSession();
         try {
             session.startTransaction();
             await this.userModel.findByIdAndUpdate(userId,
                 { $set: {'auth.username': newUsername} },
                 {
-                    runValidators: true,
+                    runValidators: true,    // Need to run validators to check conflicts
                     session: session
                 }
             );
@@ -79,15 +107,21 @@ class AccountRepository {
         }
     }
 
-    // Changing username. Need to run validators
-    changeEmail = async (userId, newEmail, changes) => {
+    /**
+     * For changing email
+     * 
+     * @param {string} userId ObjectId of the user as string
+     * @param {string} newEmail New email to be set
+     * @param {Object} changes ChangeLog
+     */
+    async changeEmail (userId, newEmail, changes) {
         const session = await mongoose.startSession();
         try {
             session.startTransaction();
             await this.userModel.findByIdAndUpdate(userId, 
                 { $set: { 'auth.email': newEmail } },
                 {
-                    runValidators: true,
+                    runValidators: true,    // Need to run validators to check conflicts
                     session: session
                 }
             );
@@ -111,8 +145,14 @@ class AccountRepository {
         }
     }
 
-    // Updating any field of 'user.profile' in a single method
-    updateProfile = async (userId, updates, changes) => {
+    /**
+     * For updating profile fields(single/multiple)
+     * 
+     * @param {string} userId ObjectId of the user as string
+     * @param {string} updates Object containing fields to update
+     * @param {Object} changes ChangeLog
+     */
+    async updateProfile (userId, updates, changes) {
         const session = await mongoose.startSession();
         try {
             session.startTransaction();
@@ -138,8 +178,11 @@ class AccountRepository {
         }
     }
 
-    // Soft delete account
-    deleteAccount = async(userId) => {
+    /**
+     * 
+     * @param {string} userId ObjectId of user as string
+     */
+    async deleteAccount (userId) {
         await this.userModel.findByIdAndUpdate(userId,
             { $set: {isActive: false} }
         )

@@ -7,8 +7,11 @@ class AuthRepository {
         this.model = model;
     }
 
-    // Find auth details only, including sensitive
-    // username can be email or seperate username
+    /**
+     * Find auth details only, including sensitive
+     * 
+     * @param {string} identifier - Can be email or username
+     */
     findUserAuth = async (identifier) => {
         const user = await this.userRepository.findUserByUsername(identifier).select('_id +auth.passwordHash').lean();
         return user;
@@ -27,8 +30,13 @@ class AuthRepository {
     */
 
 
-    // Adding a new user, only availabe in auth feature, auth.role field can only be updated by admin
-    addNewUser = async (signupData) => {
+    /**
+     * Adding a new user, only availabe in auth feature
+     *
+     * @param {Object} signupData- Validated required signup fields. Flat object shape
+     * @throws {ConflictError} - If the user is not created due to non-unique username or email
+     */ 
+    addNewUser = async (signupData) => { // auth.role field should not be touched here
         try {
             const newUser = await this.model.create({
                 auth: {

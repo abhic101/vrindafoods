@@ -3,6 +3,12 @@ const zodParser = require('../../middlewares/zodParser');
 const { changePasswordSchema, changeEmailSchema, changeUsernameSchema, updateProfileSchema } = require('./account.schemas');
 const auth = require('../../middlewares/auth');
 
+/**
+ * '/account' route factory
+ * 
+ * @param {import('./account.controller')} accountController - Controller for the account routes 
+ * @returns Router object for account route
+ */
 function createAccountRoute(accountController) {
     const router = express.Router();
 

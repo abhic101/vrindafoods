@@ -1,6 +1,6 @@
 const { z } = require('zod');
 
-// Old password only need lenght rule, but new password must follow all password rules
+// Old password only need length rule, but new password must follow all password rules
 const changePasswordSchema = z.object({
     currentPassword: z.string()
         .min(8, 'Password must be atleast 8 characters long'),
@@ -30,7 +30,7 @@ const changeEmailSchema = z.object({
         .toLowerCase()
 }).strict();
 
-// Atleast one field should be present, thats why refined
+// Atleast one field should be present, thats why refine() being used
 const updateProfileSchema = z.object({
     firstname: z.string().trim()
         .min(1, 'Firstname cannot be empty')

@@ -5,9 +5,11 @@ const hasPermission = require('../config/accessRules');
 /**
  * 
  * @param {string} requiredPermission - The permission string to check against 
- * @returns {Function} - The actual Express middleware function
+ * @returns {Function} Actual Express middleware function
+ * @throws {UnauthorizedError} If no token found
+ * @throws {ForbiddenError} If user does not have permission to access route
+ * @throws {TokenExpiredError} If token has expired
  */
-
 const auth = (requiredPermission) => ((req, res, next) => {
     try {
         if (!req.cookies.auth) {

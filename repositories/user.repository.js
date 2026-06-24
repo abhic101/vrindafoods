@@ -1,38 +1,57 @@
 class UserRepository {
+    /**
+     * 
+     * @param {import('../models/user.model')} userModel 
+     */
     constructor(userModel) {
         this.userModel = userModel;
     }
 
-    // Internal data are not selected by default, can be selected in
-    // other repositories when needed using select
-
-    // Finding user by 'auth.username' or 'email.username'
-    findUserByUsername = (username) => {
-        const userQuery = this.userModel.findOne({
-            $or : [
-                {'auth.email': username},
-                {'auth.username': username}
+    /**
+     * Finds a user by username or email. Internal fields excluded by default.
+     *
+     * @param {string} username - Either auth.username or auth.email
+     * @returns {mongoose.Query} Unexecuted Query to user with auth and profile fields
+     */
+    findUserByUsername(username) {
+        return this.userModel.findOne({
+            $or: [
+                { 'auth.email': username },
+                { 'auth.username': username }
             ],
             isActive: true
         }).select('auth.email auth.username auth.role profile');
-        return userQuery;
     }
 
-    // These functions work on user's objectID
-    findUserById = (userId) => {
-        const userQuery = this.userModel.findOne({_id: userId, isActive: true});
-        return userQuery;
-    }
-    // Find only auth details of the user excluding sensitive
-    findUserAuth = (userId) => {
-        const userQuery = this.findUserById(userId).select('auth');
-        return userQuery;
+    /**
+     * Base query for finding an active user by ObjectId.
+     * 
+     * @param {string} userId - MongoDB ObjectId as string
+     * @returns {mongoose.Query} Unexecuted Query to full user document, except sensitive fields
+     */
+    findUserById(userId) {
+        return this.userModel.findOne({ _id: userId, isActive: true });
     }
 
-    // Find only profile of the user
-    findUserProfile = (userId) => {
-        const userQuery = this.findUserById(userId).select('profile');
-        return userQuery;
+    /**
+     * Finds auth details of an active user by ObjectId. Excludes sensitive fields
+     * like passwordHash unless explicitly selected downstream.
+     *
+     * @param {string} userId - MongoDB ObjectId as string
+     * @returns {mongoose.Query} Unexecuted Query to user with only auth fields
+     */
+    findUserAuth(userId) {
+        return this.findUserById(userId).select('auth');
+    }
+
+    /**
+     * Finds profile of an active user by ObjectId.
+     *
+     * @param {string} userId - MongoDB ObjectId as string
+     * @returns {mongoose.Query} Unexecuted Query to user with only profile fields
+     */
+    findUserProfile(userId) {
+        return this.findUserById(userId).select('profile');
     }
 }
 

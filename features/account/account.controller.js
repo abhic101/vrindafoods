@@ -1,9 +1,13 @@
 class AccountController {
+    /**
+     * 
+     * @param {import('./account.services')} accountService
+     */
     constructor (accountService) {
         this.accountService = accountService;
     }
 
-    getProfile = async (req, res, next) => {
+    async getProfile (req, res, next) {
         try {
             const profile = await this.accountService.getProfile(req.user.userId);
             res.status(201).json({
@@ -16,7 +20,7 @@ class AccountController {
         }
     }
 
-    changePassword = async (req, res, next) => {
+    async changePassword (req, res, next) {
         try {
             const {currentPassword, newPassword} = req.body;
             await this.accountService.changePassword(req.user.userId, {currentPassword, newPassword});
@@ -32,7 +36,7 @@ class AccountController {
         }
     }
 
-    changeUsername = async (req, res, next) => {
+    async changeUsername (req, res, next) {
         try {
             const {password, newUsername} = req.body;
             await this.accountService.changeUsername(req.user.userId, {password, newUsername});
@@ -45,7 +49,7 @@ class AccountController {
         }
     }
 
-    changeEmail = async (req, res, next) => {
+    async changeEmail (req, res, next) {
         try {
             const {password, newEmail} = req.body;
             await this.accountService.changeEmail(req.user.userId, {password, newEmail});
@@ -58,7 +62,7 @@ class AccountController {
         }
     }
 
-    deleteAccount = async (req, res, next) => {
+    async deleteAccount (req, res, next) {
         try {
             const password = req.body.password;
             await this.accountService.deleteAccount(req.user.userId, password);
@@ -71,7 +75,7 @@ class AccountController {
         }
     }
 
-    updateProfile = async (req, res, next) => {
+    async updateProfile (req, res, next) {
         try {
             const profile = await this.accountService.updateProfile(req.user.userId, req.body);
             res.status(201).json({

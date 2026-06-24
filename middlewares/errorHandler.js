@@ -9,7 +9,7 @@ function errorHandler(err, req, res, next) {
         // logger
     }
 
-    // Run handlers
+    // Find and run handler from registry
     const handler = registry.get(err.name);
     if (handler) {
         handler(err, res);

@@ -3,11 +3,22 @@ const { UnauthorizedError, ConflictError } = require('../../errors/app.errors');
 const { buildChangeLog } = require('./account.utils');
 
 class AccountServices {
+    /**
+     * 
+     * @param {import('./account.repository')} accountRepository 
+     * @param {import('../../repositories')} userRepository 
+     */
     constructor(accountRepository, userRepository) {
         this.accountRepository = accountRepository;
     }
 
     // -----HELPER METHODS-----
+
+    /**
+     * 
+     * @param {string} userId ObjectId of the user in the form of string
+     * @returns User document with only auth details
+     */
     #getUser = async (userId) => {
         const user = await this.accountRepository.findUserAuth(userId);
         if (!user) {
@@ -15,6 +26,12 @@ class AccountServices {
         }
         return user;
     }
+
+    /**
+     * 
+     * @param {string} password Password recieved from client
+     * @param {string} passwordHash Hashed password string from User document
+     */
     #verifyPassword = async (password, passwordHash) => {
         const isPasswordMatch = await comparePassword(password, passwordHash);
         if (!isPasswordMatch) {
@@ -23,7 +40,12 @@ class AccountServices {
     }
 
     // -----SERVICE METHODS-----
-    getProfile = async (userId) => {
+    /**
+     * 
+     * @param {*} userId 
+     * @returns 
+     */
+    async getProfile (userId) {
         const user = await this.accountRepository.findUserProfile(userId);
         if (!user) {
             throw new NotFoundError('User not found');
@@ -31,7 +53,13 @@ class AccountServices {
         return user;
     }
 
-    changePassword = async (userId, {currentPassword, newPassword}) => {
+    /**
+     * Change password of logged in user
+     * 
+     * @param {string} userId ObjectId of user as string
+     * @param {Object} param1 Object containing current password and new password to set
+     */
+    async changePassword (userId, {currentPassword, newPassword}) {
         // Equality check
         if (newPassword === currentPassword) {
             throw new ConflictError('New password cannot be same as old password');
@@ -46,7 +74,13 @@ class AccountServices {
         await this.accountRepository.changePassword(userId, newPasswordHash, changes);
     }
 
-    changeUsername = async (userId, {password, newUsername}) => {
+    /**
+     * Change username of logged in user
+     * 
+     * @param {string} userId ObjectId of user as string 
+     * @param {Object} param1 Password for verification and new username as object
+     */
+    async changeUsername (userId, {password, newUsername}) {
         const user = await this.#getUser(userId);
 
         // Equality check
@@ -60,7 +94,13 @@ class AccountServices {
         await this.accountRepository.changeUsername(userId, newUsername, changes);
     }
 
-    changeEmail = async (userId, {password, newEmail}) => {
+    /**
+     * Change email of logged in user
+     * 
+     * @param {string} userId ObjectId of user as string
+     * @param {Object} param1 Password for verification and new email to set
+     */
+    async changeEmail (userId, {password, newEmail}) {
         const user = await this.#getUser(userId);
         
         // Equality Check
@@ -74,7 +114,13 @@ class AccountServices {
         await this.accountRepository.changeEmail(userId, newEmail, changes);
     }
 
-    updateProfile = async(userId, updates) => {
+    /**
+     * Update fields of user profile using a single method
+     * 
+     * @param {string} userId ObjectId of user as string
+     * @param {Object} updates Flat object containing fields to change
+     */
+    async updateProfile (userId, updates) {
         const user = await this.getProfile(userId);
 
         // Strip equal fields from updates
@@ -95,7 +141,13 @@ class AccountServices {
         await this.accountRepository.updateProfile(userId, updates, changes);
     }
 
-    deleteAccount = async(userId, password) => {
+    /**
+     * Delete self account
+     * 
+     * @param {string} userId ObjectId of the user in the form of string
+     * @param {string} password Password for verification
+     */
+    async deleteAccount (userId, password) {
         const user = await this.#getUser(userId);
         await this.#verifyPassword(password, user.auth.passwordHash);
         

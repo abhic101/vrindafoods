@@ -1,5 +1,11 @@
 class AppError extends Error {
     code = 500;
+
+    /**
+     * 
+     * @param {string} message Error message
+     * @param {Object} options Cause error in {cause: err} format
+     */
     constructor(message, options = {}) {
         super(message, {cause: options.cause});
         this.name = this.constructor.name;
@@ -23,6 +29,13 @@ class NotFoundError extends AppError {
 }
 class ValidationError extends BadRequestError {
     code = 422;
+
+    /**
+     * 
+     * @param {string} message Error message
+     * @param {Object} details Object containing fields that failed validation and why
+     * @param {Ojbect} options Cause error in {cause: err} format
+     */
     constructor (message, details = {}, options = {}) {
         super(message, {cause: options.cause});
         this.details = details;

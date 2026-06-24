@@ -1,10 +1,14 @@
 class AuthController {
+
+    /**
+     * @param {import('./auth.services')} authService
+     */
     constructor(authService) {
         this.authService = authService;
     }
 
     // login endpoint handler. Sends secure, httpOnly cookie with jwt inside, age same as jwt
-    login = async (req, res, next) => {
+    async login (req, res, next) {
         try {
             const {username, email, password} = req.body;
             const identifier = username ? username : email;
@@ -23,7 +27,7 @@ class AuthController {
         }
     }
 
-    signup = async (req, res, next) => {
+    async signup (req, res, next) {
         try {
             const signupData = req.body;
             await this.authService.signup(signupData);

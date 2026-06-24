@@ -2,7 +2,11 @@ const express = require('express');
 const zodParser = require('../../middlewares/zodParser');
 const { loginSchema, signupSchema } = require('./auth.schemas');
 
-// '/auth' route factory
+/**
+ * '/auth' route factory
+ * @param {import('./auth.controller')} - Instance of AuthController class
+ * @returns Router object for '/auth' route
+ */
 function createAuthRoute(authController) {
     const router = express.Router();
     

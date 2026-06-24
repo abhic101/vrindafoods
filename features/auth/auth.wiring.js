@@ -3,7 +3,11 @@ const AuthController = require('./auth.controller');
 const AuthService = require('./auth.services');
 const AuthRepository = require('./auth.repository');
 
-// Wiring order should previal in every feature wiring
+/**
+ * Wiring order should previal in every feature wiring
+ * 
+ * @param {import('../../models/user.model')} userRepository - Shared UserRepository class instance
+ */ 
 function wireAuthFeature(userRepository) {
     const authRepository = new AuthRepository(UserModel, userRepository);
     const authService = new AuthService(authRepository);
