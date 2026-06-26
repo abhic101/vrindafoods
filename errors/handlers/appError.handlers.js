@@ -2,7 +2,7 @@ const registry = require('../registry');
 
 /**
  * 
- * @param {Error} err Relevent exception object
+ * @param {Error} err ValidationError or its sub-class exception object
  * @param {Object} res Express response object
  */
 const validationErrorHandler = (err, res) => {

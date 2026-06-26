@@ -13,7 +13,7 @@ class AuthRepository {
      * @param {string} identifier - Can be email or username
      */
     findUserAuth = async (identifier) => {
-        const user = await this.userRepository.findUserByUsername(identifier).select('_id +auth.passwordHash').lean();
+        const user = await this.userRepository.findByUsername(identifier).select('_id +auth.passwordHash').lean();
         return user;
     }
 

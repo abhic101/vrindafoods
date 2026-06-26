@@ -23,7 +23,7 @@ class AccountRepository {
      * @returns User document with only non-sensitive fields if found. undefined otherwise
      */
     async findUserProfile (userId) {
-        return await this.userRepository.findUserProfile(userId).select('auth.email auth.username auth.role').lean();
+        return await this.userRepository.findProfileById(userId).select('auth.email auth.username auth.role').lean();
     }
 
     /**
@@ -33,7 +33,7 @@ class AccountRepository {
      * @returns User document with auth and sensitive fields
      */
     findUserAuth = async (userId) => {
-        return await this.userRepository.findUserAuth(userId).lean();
+        return await this.userRepository.findAuthById(userId).lean();
     }
 
     /**

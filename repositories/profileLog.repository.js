@@ -10,7 +10,7 @@ class ProfileLogRepository {
      * @param {Array} changesArray Array that is already in required shape
      * @returns 
      */
-    addLog = (userID, changesArray) => {
+    addLog (userID, changesArray) {
         const newLogQuery = new this.profileModel({
             user: userID,
             changes: changesArray,

@@ -4,36 +4,55 @@ const { ROLES } = require('../constants/models.constants');
 const accessRules = {
     [ROLES.ADMIN]: [
         'user:*:read:self',
-        'user:*:read:any',
+        'user:*:read:*',
         'user:profile:update:self',
-        'user:role:update:any',
-        'user:*:delete:any',
+        'user:role:update:*',
+        'user:*:delete:*',
+        'product:*:*:*'
     ],
     [ROLES.MANAGER]: [
         'user:*:read:self',
         'user:credentials:update:self',
-        'user:profile:update:self'
+        'user:profile:update:self',
+        'product:*:read:*',
+        'product:*:create:self',
+        'product:*:update:self',
+        'product:*:delete:self'
     ],
     [ROLES.CUSTOMER]: [
         'user:*:read:self',
         'user:credentials:update:self',
         'user:profile:update:self',
-        'user:*:delete:self'
+        'user:*:delete:self',
+        'product:*:read:*'
     ]
 };
 
 /**
  * @param {string} role - Role of the user being authorized
- * @param {string} permission - Permission string to check against
- * @returns {Boolean} True if the user with 'role' has 'permission', false otherwise
+ * @param {string} granted - Permission string to check against
+ * @returns {Array} Array containing matched permissions
  */
-function hasPermission(role, permission) {
+function matchPermission(role, granted) {
     const permissions = accessRules[role] || [];
-
-    // wildCard Matching
-
-    if (permissions.includes(permission)) return true;
-    return false;
+    const grantedArr = granted.split(':');
+    
+    return permissions.filter((required) => {
+        const requiredArr = required.split(':');
+        return requiredArr.every((attribute, i) => attribute === '*' || attribute === grantedArr[i]);
+    });
 }
 
-module.exports = hasPermission;
+/**
+ * @param {string} role - Role of the user being authorized
+ * @param {string} granted - Permission string to check against
+ * @returns {Boolean} True if the user with 'role' has 'permission', false otherwise
+ */
+function hasPermission(role, granted) {
+    return matchPermission(role, granted).length > 0;
+}
+
+module.exports = {
+    hasPermission,
+    matchPermission
+};

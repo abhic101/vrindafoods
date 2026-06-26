@@ -13,7 +13,7 @@ class UserRepository {
      * @param {string} username - Either auth.username or auth.email
      * @returns {mongoose.Query} Unexecuted Query to user with auth and profile fields
      */
-    findUserByUsername(username) {
+    findByUsername(username) {
         return this.userModel.findOne({
             $or: [
                 { 'auth.email': username },
@@ -29,7 +29,7 @@ class UserRepository {
      * @param {string} userId - MongoDB ObjectId as string
      * @returns {mongoose.Query} Unexecuted Query to full user document, except sensitive fields
      */
-    findUserById(userId) {
+    findById(userId) {
         return this.userModel.findOne({ _id: userId, isActive: true });
     }
 
@@ -40,8 +40,8 @@ class UserRepository {
      * @param {string} userId - MongoDB ObjectId as string
      * @returns {mongoose.Query} Unexecuted Query to user with only auth fields
      */
-    findUserAuth(userId) {
-        return this.findUserById(userId).select('auth');
+    findAuthById(userId) {
+        return this.findById(userId).select('auth');
     }
 
     /**
@@ -50,8 +50,8 @@ class UserRepository {
      * @param {string} userId - MongoDB ObjectId as string
      * @returns {mongoose.Query} Unexecuted Query to user with only profile fields
      */
-    findUserProfile(userId) {
-        return this.findUserById(userId).select('profile');
+    findProfileById(userId) {
+        return this.findById(userId).select('profile');
     }
 }
 
