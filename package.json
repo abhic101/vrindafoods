@@ -8,7 +8,9 @@
   "main": "server.js",
   "scripts": {
     "dev": "node server.js",
-    "altDev": "nodemon server.js"
+    "altDev": "nodemon server.js",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "dependencies": {
     "bcrypt": "^6.0.0",
@@ -20,5 +22,10 @@
     "mongoose": "^9.7.0",
     "morgan": "^1.11.0",
     "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@types/supertest": "^7.2.0",
+    "supertest": "^7.2.2",
+    "vitest": "^4.1.9"
   }
 }

@@ -9,9 +9,10 @@ async function connect() {
         connectTimeoutMS: 10000,
         socketTimeoutMS: 45000
     });
+    console.log(process.env.DB_NAME);
 
     mongoose.connection.on('disconnected', () => console.warn("MongoDB disconnected"));
-    mongoose.connection.on('errro', (err) => console.error('MongoDB error: ', err));
+    mongoose.connection.on('error', (err) => console.error('MongoDB error: ', err));
 }
 
 async function disconnect() {

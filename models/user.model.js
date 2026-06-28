@@ -23,7 +23,7 @@ const userSchema = mongoose.Schema({
         role: {
             type: String,
             enum: Object.values(ROLES),
-            default: 'user'
+            default: ROLES.CUSTOMER
         }
     },
     profile: {

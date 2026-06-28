@@ -8,9 +8,9 @@ class ProductRepository {
      * @param {import('../../repositories/user.repository')} userRepostory
      * @param {import('../../repositories/product.repository')} sharedProductRepository
      */
-    constructor(productModel, userRepostory, sharedProductRepository) {
+    constructor(productModel, userRepository, sharedProductRepository) {
         this.productModel = productModel;
-        this.userRepository = userRespository;
+        this.userRepository = userRepository;
         this.sharedProductRepository = sharedProductRepository;
     }
 

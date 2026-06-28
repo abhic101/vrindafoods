@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const specificationsSchema = require('./specifications.schema');
 
 // Product model, not final, fields can be added as required, semantic and logical nesting can be done
 const productSchema = new mongoose.Schema({

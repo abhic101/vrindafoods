@@ -26,19 +26,20 @@ class AuthService {
     async login (identifier, password) {
         const user = await this.authRepository.findUserAuth(identifier);
         if (!user) {
-            throw new UnauthorizedError('Invalid username or password');
+            throw new UnauthorizedError('Invalid username or password 1');
         }
 
         // No timing atk safeguard due to username being easily accessible
         const isPasswordMatched = await comparePassword(password, user.auth.passwordHash)
         if (!isPasswordMatched) {
-            throw new UnauthorizedError('Invalid username or password');
+            throw new UnauthorizedError('Invalid username or password 2');
         }
 
-        return jwt.sign({
+        const token = jwt.sign({
             userId: user._id.toString(),
             role: user.auth.role
         }, process.env.JWT_SECRET_KEY, {expiresIn: '1d'});
+        return token;
     }
 
     /**

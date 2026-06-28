@@ -8,6 +8,7 @@ const wireDependencies = require('./wireDependencies');
 // Routes factories
 const createAuthRoute = require('./features/auth/auth.routes');
 const createAccountRoute = require('./features/account/account.routes');
+const createProductRoute = require('./features/product/product.routes');
 const errorHandler = require('./middlewares/errorHandler');
 
 const app = express();
@@ -19,7 +20,7 @@ app.use(morgan(process.env.STAGE));
 app.use(cookieParser());
 
 // Wiring feature dependencies
-const {authController, accountController} = wireDependencies();
+const {authController, accountController, productController} = wireDependencies();
 
 // Creating and Mounting routes
 app.get('/', (req, res) => {
@@ -27,6 +28,7 @@ app.get('/', (req, res) => {
 });
 app.use('/auth', createAuthRoute(authController));
 app.use('/account', createAccountRoute(accountController));
+app.use('/product', createProductRoute(productController));
 // more routes mounting here
 
 // Global error handler mounting

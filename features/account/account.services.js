@@ -60,14 +60,13 @@ class AccountServices {
      * @param {Object} param1 Object containing current password and new password to set
      */
     async changePassword (userId, {currentPassword, newPassword}) {
+        const user = await this.#getUser(userId);
+        await this.#verifyPassword(currentPassword, user.auth.passwordHash);
+
         // Equality check
         if (newPassword === currentPassword) {
             throw new ConflictError('New password cannot be same as old password');
         }
-
-        const user = await this.#getUser(userId);
-        await this.#verifyPassword(currentPassword, user.auth.passwordHash);
-
         const newPasswordHash = await hashPassword(newPassword);
         const changes = buildChangeLog(user.auth, {passwordHash: newPasswordHash}, 'auth');
 
@@ -151,7 +150,7 @@ class AccountServices {
         const user = await this.#getUser(userId);
         await this.#verifyPassword(password, user.auth.passwordHash);
         
-        await this.accountRepository.deleteUser(userId);
+        await this.accountRepository.deleteAccount(userId);
     }
 }
 

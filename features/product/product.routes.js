@@ -1,6 +1,7 @@
 const express = require("express");
 const auth = require('../../middlewares/auth');
 const zodParser = require('../../middlewares/zodParser');
+const { productCreateSchema, productUpdateSchema } = require('./product.schema');
 
 /**
  * Factory function to create '/product' route

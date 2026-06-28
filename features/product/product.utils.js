@@ -6,18 +6,18 @@
 function shapeProductData(data) {
     const productData = {
         'listing.name': productData.name,
-            'listing.mrp': productData.mrp,
-            'listing.selling_price': productData.selling_price,
-            'listing.thumbnail': productData.thumbnail,
-            'details.product_images': Object.values(productData.product_images),
-            'details.specifications.units': productData.specs.units,
-            'details.specifications.amount': productData.specs.amount,
-            'details.specifications.amount_unit': productData.specs.amount_unit,
-            'details.specifications.description': productData.specs.description,
-            'details.seller': productData.seller,
-            'meta.brand': productData.brand,
-            'meta.category': productData.category,
-            'internal_info.createdBy': userId
+        'listing.mrp': productData.mrp,
+        'listing.selling_price': productData.selling_price,
+        'listing.thumbnail': productData.thumbnail,
+        'details.product_images': Object.values(productData.product_images),
+        'details.specifications.units': productData.specs.units,
+        'details.specifications.amount': productData.specs.amount,
+        'details.specifications.amount_unit': productData.specs.amount_unit,
+        'details.specifications.description': productData.specs.description,
+        'details.seller': productData.seller,
+        'meta.brand': productData.brand,
+        'meta.category': productData.category,
+        'internal_info.createdBy': userId
     }
     return Object.fromEntries(
         Object.entries(obj).filter(([_, v]) => v !== undefined));

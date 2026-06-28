@@ -14,12 +14,12 @@ function createAccountRoute(accountController) {
 
     // Routes
     router.route('/profile')
-        .get(auth('read:user:self'), accountController.getProfile)
-        .patch(zodParser(updateProfileSchema), auth('update:profile:self'), accountController.updateProfile);
-    router.post('/password', zodParser(changePasswordSchema), auth('update:credentials:self'), accountController.changePassword);
-    router.post('/username', zodParser(changeUsernameSchema), auth('update:credentials:self'), accountController.changeUsername);
-    router.post('/email', zodParser(changeEmailSchema), accountController.changeEmail);
-    router.delete('/', accountController.deleteAccount);
+        .get(auth('user:*:read:self'), accountController.getProfile)
+        .patch(zodParser(updateProfileSchema), auth('user:profile:update:self'), accountController.updateProfile);
+    router.post('/password', zodParser(changePasswordSchema), auth('user:credentials:update:self'), accountController.changePassword);
+    router.post('/username', zodParser(changeUsernameSchema), auth('user:credentials:update:self'), accountController.changeUsername);
+    router.post('/email', zodParser(changeEmailSchema), auth('user:credentials:update:self'), accountController.changeEmail);
+    router.delete('/', auth('user:*:delete:self'), accountController.deleteAccount);
 
     return router;
 }

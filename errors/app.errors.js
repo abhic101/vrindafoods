@@ -41,7 +41,9 @@ class ValidationError extends BadRequestError {
         this.details = details;
     }
 }
-class ConflictError extends ValidationError {}
+class ConflictError extends ValidationError {
+    code = 409;
+}
 
 module.exports = {
     AppError,

@@ -8,7 +8,7 @@ class AuthController {
     }
 
     // login endpoint handler. Sends secure, httpOnly cookie with jwt inside, age same as jwt
-    async login (req, res, next) {
+    login = async (req, res, next) => {
         try {
             const {username, email, password} = req.body;
             const identifier = username ? username : email;
@@ -27,11 +27,11 @@ class AuthController {
         }
     }
 
-    async signup (req, res, next) {
+    signup = async (req, res, next) => {
         try {
             const signupData = req.body;
             await this.authService.signup(signupData);
-            res.status(200).json({
+            res.status(201).json({
                 message: 'user created succesfully',
                 success: true
             })

@@ -7,11 +7,11 @@ class AccountController {
         this.accountService = accountService;
     }
 
-    async getProfile (req, res, next) {
+    getProfile = async (req, res, next) => {
         try {
             const profile = await this.accountService.getProfile(req.user.userId);
-            res.status(201).json({
-                status: true,
+            res.status(200).json({
+                success: true,
                 message: 'profile fetched successfully',
                 profile: profile
             })
@@ -20,14 +20,14 @@ class AccountController {
         }
     }
 
-    async changePassword (req, res, next) {
+    changePassword = async (req, res, next) => {
         try {
             const {currentPassword, newPassword} = req.body;
             await this.accountService.changePassword(req.user.userId, {currentPassword, newPassword});
 
             // Clear auth cookie and prompt re-login
             res.clearCookie('auth');
-            res.status(201).json({
+            res.status(200).json({
                 success: true,
                 message: 'Password changed successfully'
             });
@@ -36,11 +36,11 @@ class AccountController {
         }
     }
 
-    async changeUsername (req, res, next) {
+    changeUsername = async (req, res, next) => {
         try {
             const {password, newUsername} = req.body;
             await this.accountService.changeUsername(req.user.userId, {password, newUsername});
-            res.status(201).json({
+            res.status(200).json({
                 success: true,
                 message: 'Username changed successfully'
             });
@@ -49,11 +49,11 @@ class AccountController {
         }
     }
 
-    async changeEmail (req, res, next) {
+    changeEmail = async (req, res, next) => {
         try {
             const {password, newEmail} = req.body;
             await this.accountService.changeEmail(req.user.userId, {password, newEmail});
-            res.status(201).json({
+            res.status(200).json({
                 success: true,
                 message: 'Email successfully changed'
             });
@@ -62,28 +62,28 @@ class AccountController {
         }
     }
 
-    async deleteAccount (req, res, next) {
-        try {
-            const password = req.body.password;
-            await this.accountService.deleteAccount(req.user.userId, password);
-            res.status(201).json({
-                success: true,
-                message: 'Account deleted successfully'
-            })
-        } catch(err) {
-            next(err);
-        }
-    }
-
-    async updateProfile (req, res, next) {
+    updateProfile = async (req, res, next) => {
         try {
             const profile = await this.accountService.updateProfile(req.user.userId, req.body);
-            res.status(201).json({
+            res.status(200).json({
                 success: true,
                 message: 'Profile updated',
                 profile
             })
         } catch (err) {
+            next(err);
+        }
+    }
+
+    deleteAccount = async (req, res, next) => {
+        try {
+            const password = req.body.password;
+            await this.accountService.deleteAccount(req.user.userId, password);
+            res.status(200).json({
+                success: true,
+                message: 'Account deleted successfully'
+            })
+        } catch(err) {
             next(err);
         }
     }

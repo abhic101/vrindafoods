@@ -1,4 +1,4 @@
-const { matchPermission } = required('../../config/accessRules');
+const { matchPermission } = require('../../config/accessRules');
 
 /**
  * Check if the current user can update the productId product

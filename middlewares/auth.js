@@ -21,7 +21,7 @@ const auth = (granted) => ((req, res, next) => {
 
         // Check permission
         const matchedPermission = matchPermission(req.user.role, granted);
-        if (matchedPermission.length > 0) {
+        if (!matchedPermission.length > 0) {
             throw new ForbiddenError('You do not have access to do this operation');
         }
         req.user.permission = {
@@ -32,10 +32,11 @@ const auth = (granted) => ((req, res, next) => {
         }
         next();
     } catch (err) {
+        const error = err;
         if (err.name === 'TokenExpiredError') {
-            throw new TokenExpiredError('Please login again 1');
+            error = new TokenExpiredError('Please login again');
         }
-        next(err);
+        next(error);
     }
 })
 
