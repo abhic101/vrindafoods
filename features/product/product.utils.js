@@ -1,26 +1,31 @@
+function stripUndefined(data) {
+    const keys = Object.keys(data);
+
+}
+
+
 /**
  * 
- * @param {Object} data Object containing fields to add from request
+ * @param {Object} productData Object containing fields to add from request
  * @returns {Object} Object in the required shape to create or update
  */
-function shapeProductData(data) {
-    const productData = {
+function shapeProductData(productData) {
+    const flattenData = {
         'listing.name': productData.name,
         'listing.mrp': productData.mrp,
         'listing.selling_price': productData.selling_price,
         'listing.thumbnail': productData.thumbnail,
         'details.product_images': Object.values(productData.product_images),
-        'details.specifications.units': productData.specs.units,
-        'details.specifications.amount': productData.specs.amount,
-        'details.specifications.amount_unit': productData.specs.amount_unit,
-        'details.specifications.description': productData.specs.description,
+        'details.specifications.units': productData.specs?.units,
+        'details.specifications.amount': productData.specs?.amount,
+        'details.specifications.amount_unit': productData.specs?.amount_unit,
+        'details.specifications.description': productData.specs?.description,
         'details.seller': productData.seller,
         'meta.brand': productData.brand,
         'meta.category': productData.category,
-        'internal_info.createdBy': userId
     }
     return Object.fromEntries(
-        Object.entries(obj).filter(([_, v]) => v !== undefined));
+        Object.entries(flattenData).filter(([_, v]) => v !== undefined));
 }
 
 /**

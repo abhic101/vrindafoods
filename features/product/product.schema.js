@@ -48,7 +48,7 @@ const createProductSchema = z.object({
 });
 
 const updateProductSchema = createProductSchema.partial().refine(
-    (schema) => Object.keys(schema) > 0,
+    (schema) => Object.keys(schema).length > 0,
     'Atleast one update should be present'
 );
 

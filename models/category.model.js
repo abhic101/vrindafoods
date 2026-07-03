@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const categorySchema = new mongoose.Schema({
-    category: {
+    name: {
         type: String,
         required: true,
         trim: true
@@ -11,6 +11,11 @@ const categorySchema = new mongoose.Schema({
         ref: 'Category',
         default: null
     },
+    ancestors: {
+        type: [mongoose.Schema.Types.ObjectId],
+        ref: 'Category',
+        default: []
+    },
     isActive: {
         type: Boolean,
         default: true
@@ -18,6 +23,7 @@ const categorySchema = new mongoose.Schema({
 });
 
 categorySchema.index({category: 1, parent: 1}, {unique: true, partialFilterExpression: {isActive: true}});
+categorySchema.index({category: 1, parent: 1}, {partialFilterExpression: {isActive: true}});
 categorySchema.index({parent: 1, isActive: 1});
 
 module.exports = mongoose.model('Category', categorySchema);

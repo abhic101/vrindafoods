@@ -4,7 +4,7 @@ const { matchPermission } = require('../config/accessRules');
 
 /**
  * 
- * @param {string} granted - The permission string granted to req
+ * @param {string} granted - The permission string 'resource:sub-resource:action:scope'
  * @returns {Function} Actual Express middleware function
  * @throws {UnauthorizedError} If no token found
  * @throws {ForbiddenError} If user does not have permission to access route

@@ -10,7 +10,7 @@ function buildConflictErrorDetails(err) {
     const fields = Object.keys(err.keyPattern);
     if (fields) {
         for (let field of fields) {
-            const actualField = field.split('.')[1];
+            const actualField = field.split('.').at(-1);
             details.push({field: actualField, message: `${actualField} is already in use`});
         }
     }

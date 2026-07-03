@@ -1,6 +1,6 @@
 const {flattenProductListing, flattenProduct} = require('./product.utils');
 const { comparePassword } = require('../../utils/password.utils');
-const { UnauthorizedError } = require('../../errors/app.errors');
+const { UnauthorizedError, ValidationError } = require('../../errors/app.errors');
 const { canUpdate, canDelete } = require('./product.policy');
 
 class ProductService {
@@ -19,6 +19,10 @@ class ProductService {
      * @returns Newly created product listing
      */
     async addNewProduct(userId, productData) {
+        const category = this.productRepository.findCategoryById(product.category);
+        if (!category) {
+            throw new ValidationError('Invalid Category');
+        }
         return await this.productRepository.addNewProduct(userId, productData);
     }
 
